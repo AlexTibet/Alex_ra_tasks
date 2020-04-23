@@ -27,7 +27,7 @@ def time_detect(a: str) -> str:    # Определяет время тольк�
     time = a[1:20].split('-')
     hour, minutes, sec = time[1].split(':')[0].split('.')
     time = datetime.time(hour_detect(hour), int(minutes), int(sec))
-    return '\nМСК-' + str(time) + ' | '
+    return f'\nМСК-{str(time)} | '
 
 
 def game_id_detect(a: str, in_game_id: int) -> int:
@@ -67,38 +67,37 @@ def death_detect(a: str) -> str:
     d_name = a[re.search(pp.death_name, a).end():(re.search(pp.death_id, a).start()-2)].strip()
     d_id = a[re.search(pp.death_id, a).end():(re.search(pp.death_dino, a).start()-2)].strip()
     try:
-        d_ing_id = player_info[d_id][0]
+        d_igid = player_info[d_id][0]
     except KeyError:
         return '\n'
     d_dino = a[re.search(pp.death_dino, a).end():(re.search(pp.death_grow, a).start()-2)].strip()
     if d_reson == 'Переродился':
-        d_grow = a[re.search(pp.death_grow, a).end():(re.search(pp.killer, a).start() - 2)].strip()[0:5]
-        return '{}{} | РЕСПАВНИТ {} на росте {} | SteamID: {}, ИгровойID: {}\n'.format(
-                                                                time_detect(a), d_name, d_dino, d_grow, d_id, d_ing_id)
+        d_gr = a[re.search(pp.death_grow, a).end():(re.search(pp.killer, a).start() - 2)].strip()[0:5]
+        return f'{time_detect(a)}{d_name} | РЕСПАВНИТ {d_dino} на росте {d_gr} | SteamID: {d_id}, ИгровойID: {d_igid}\n'
     elif d_reson == 'Вы умерли от сильного стресса':
-        d_grow = a[re.search(pp.death_grow, a).end():(re.search(pp.killer, a).start() - 2)].strip()[0:5]
-        return '{}{} | УМИРАЕТ от экстримального стресса на {} с ростом {} | SteamID: {}, ИгровойID: {}\n'.format(
-                                                                time_detect(a), d_name, d_dino, d_grow, d_id, d_ing_id)
+        d_gr = a[re.search(pp.death_grow, a).end():(re.search(pp.killer, a).start() - 2)].strip()[0:5]
+        return f'{time_detect(a)}{d_name} | УМИРАЕТ от экстримального стресса на {d_dino} с ростом {d_gr} ' \
+               f'| SteamID: {d_id}, ИгровойID: {d_igid}\n'
     elif d_reson == 'Смертельное падение':
-        d_grow = a[re.search(pp.death_grow, a).end():].strip()[0:5]
-        return f'{time_detect(a)}{d_name} | УМИРАЕТ от смертельного падения на {d_dino} с ростом {d_grow}' \
-               f' | SteamID: {d_id}, ИгровойID: {d_ing_id}\n'
+        d_gr = a[re.search(pp.death_grow, a).end():].strip()[0:5]
+        return f'{time_detect(a)}{d_name} | УМИРАЕТ от смертельного падения на {d_dino} с ростом {d_gr}' \
+               f' | SteamID: {d_id}, ИгровойID: {d_igid}\n'
     elif d_reson == 'Died from Lightning Strike':
-        d_grow = a[re.search(pp.death_grow, a).end():].strip()[0:5]
-        return '{}{} | УМИРАЕТ от удара молнии на {} с ростом {} | SteamID: {}, ИгровойID: {}\n'.format(
-                                                                time_detect(a), d_name, d_dino, d_grow, d_id, d_ing_id)
+        d_gr = a[re.search(pp.death_grow, a).end():].strip()[0:5]
+        return f'{time_detect(a)}{d_name} | УМИРАЕТ от удара молнии на {d_dino} с ростом {d_gr} ' \
+               f'| SteamID: {d_id}, ИгровойID: {d_igid}\n'
     else:
         try:
-            d_grow = a[re.search(pp.death_grow, a).end():(re.search(pp.killer, a).start() - 2)].strip()[0:5]
+            d_gr = a[re.search(pp.death_grow, a).end():(re.search(pp.killer, a).start() - 2)].strip()[0:5]
         except AttributeError:
-            return f'\n\n\n\n КОСЯК!\nскиньте мне файл и эту строку)\n{a}\n\n\n\n'
+            return f'\n\n\n\n Что-то новенькое!\nскиньте мне файл и эту строку)\n{a}\n\n\n\n'
         k_ = a[re.search(pp.killer, a).end():(re.search(pp.kiiller_id, a).start() - 2)].strip()
         k_id = a[re.search(pp.kiiller_id, a).end():(re.search(pp.killer_dino, a).start() - 2)].strip()
         k_ing_id = player_info[k_id][0]
         k_d = a[re.search(pp.killer_dino, a).end():(re.search(pp.killer_grow, a).start() - 2)].strip()
         k_g = a[re.search(pp.killer_grow, a).end():].strip()[0:5]
-        return '{}{} |{}| на своём {} {} УБИВАЕТ --> | {} |{}| на {} {}\n\t  |{}| УБИВАЕТ --> |{}|\n'.format(
-                                time_detect(a), k_, k_ing_id, k_d, k_g, d_name, d_ing_id, d_dino, d_grow, k_id, d_id)
+        return f'{time_detect(a)}{k_} |{k_ing_id}| на своём {k_d} {k_g} УБИВАЕТ --> | {d_name} |{d_igid}| ' \
+               f'на {d_dino} {d_gr}\n\t  |{k_id}| УБИВАЕТ --> |{d_id}|\n'
 
 
 def search_id(nik: str) -> str:

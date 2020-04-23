@@ -1,25 +1,22 @@
 # -*- coding: utf-8 -*-
 
-from PySide2.QtWidgets import *
+from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog
 from UI_tlc_gui import Ui_MainWindow
 import sys
 from tlc_pak import check_function as cf
 from tlc_pak import download_log
 
 file_name = 'None'
-spravka = '\t\tПриветствую!\n\n\tПрограмма Trouble Log Check\n\tразработана специально для сервера TROUBLE HOME\n'\
+hello = '\t\tПриветствую!\n\n\tПрограмма Trouble Log Check\n\tразработана специально для сервера TROUBLE HOME\n'\
           '\tВ игре Beasts Of Bermuda\n\n\tНапоминаю что .log файлы часто очень большие\n\tПроявите терпение если' \
           ' скачиваете'
 # Create application
 app = QApplication()
-
-
 # Create form and init UI
 Form = QMainWindow()
 ui = Ui_MainWindow()
 ui.setupUi(Form)
 Form.show()
-
 
 # Hook Logic
 
@@ -87,7 +84,7 @@ def pb_check_all():
 
 
 if __name__ == '__main__':
-    ui.textEdit.insertPlainText(spravka)
+    ui.textEdit.insertPlainText(hello)
     ui.Button_with_download_log_file.clicked.connect(pb_download)
     ui.toolButton_forlog_file.clicked.connect(pb_find_log_file)
     ui.Button_with_chek_SteamId.clicked.connect(pb_ok_with_stid)
